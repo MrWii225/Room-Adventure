@@ -6,7 +6,7 @@ public class RoomAdventure { // Main class containing game logic
     private static Room currentRoom; // The room the player is currently in
     private static String[] inventory = {null, null, null, null, null}; // Player inventory slots
     private static String status; // Message to display after each action
-    private static int playerBaseDamage; // How much damage the player does without a weapon
+    private static int playerBaseDamage = 1; // How much damage the player does without a weapon
 
     // method for new damage with weapon
     private static int newPlayerDamage() {
@@ -17,14 +17,14 @@ public class RoomAdventure { // Main class containing game logic
             
             String item = inventory[i];
             if (item != null) {
-                if (item.equals("stick")) {
-                    newDamage = 5;
+                if (item.equals("knife")) {
+                    newDamage += 4;
                 }
                 else if (item.equals("poker")) {
-                    newDamage = 10;
+                    newDamage += 9;
                 }
                 else if (item.equals("sword")) {
-                    newDamage = 10;
+                    newDamage += 14;
                 }
             }
             
@@ -102,7 +102,7 @@ public class RoomAdventure { // Main class containing game logic
                 status += "You defeated the " + m.getName() + " !";
             }
             else {
-                status += "It has " + m.getHealth() + " health left.";
+                status += " It has " + m.getHealth() + " health left.";
             }
         }
         else {
@@ -361,4 +361,5 @@ class Monster {
     public int getAttackDamage() { // Getter for attack damage
         return attackDamage;
     }
+
 }
