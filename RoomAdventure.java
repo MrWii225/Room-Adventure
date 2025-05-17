@@ -6,7 +6,32 @@ public class RoomAdventure { // Main class containing game logic
     private static Room currentRoom; // The room the player is currently in
     private static String[] inventory = {null, null, null, null, null}; // Player inventory slots
     private static String status; // Message to display after each action
-    private static int playerDamage; // How much damage the player does
+    private static int playerBaseDamage; // How much damage the player does without a weapon
+
+    // method for new damage with weapon
+    private static int newPlayerDamage() {
+        int newDamage = playerBaseDamage;
+
+
+        for (int i = 0; i < inventory.length; i++) {
+            
+            String item = inventory[i];
+            if (item != null) {
+                if (item.equals("stick")) {
+                    newDamage = 5;
+                }
+                else if (item.equals("poker")) {
+                    newDamage = 10;
+                }
+                else if (item.equals("sword")) {
+                    newDamage = 10;
+                }
+            }
+            
+        }
+        return newDamage;
+    }
+
 
 
     // constants
@@ -34,6 +59,10 @@ public class RoomAdventure { // Main class containing game logic
     private static void handleLook(String noun) { // Handles inspecting items
         String[] items = currentRoom.getItems(); // Visible items in current room
         String[] itemDescriptions = currentRoom.getItemDescriptions(); // Descriptions for each item
+        if (currentRoom.hasMonster()) {
+            status = "Focus! There's a " + currentRoom.getMonster().getName() + "!";
+            return;
+        }
         status = "I don't see that item."; // Default if item not found
         for (int i = 0; i < items.length; i++) { // Loop through items
             if (noun.equals(items[i])) { // If user-noun matches an item
@@ -44,6 +73,10 @@ public class RoomAdventure { // Main class containing game logic
 
     private static void handleTake(String noun) { // Handles picking up items
         String[] grabbables = currentRoom.getGrabbables(); // Items that can be taken
+        if (currentRoom.hasMonster()) {
+            status = "You can't grab that yet! The " + currentRoom.getMonster().getName() + " prevents you!";
+            return;
+        }
         status = "I can't grab that."; // Default if not grabbable
         for (String item : grabbables) { // Loop through grabbable items
             if (noun.equals(item)) { // If user-noun matches grabbable
@@ -61,6 +94,7 @@ public class RoomAdventure { // Main class containing game logic
     private static void handleAttack(String noun) { // Handles attacking
         if (currentRoom.hasMonster()) {
             Monster m = currentRoom.getMonster();
+            int playerDamage = newPlayerDamage();
             m.setHealth(m.getHealth() - playerDamage); // Subtracts player damage from the health of the monster
             status = "You attack the " + m.getName() + "!";
 
@@ -90,12 +124,13 @@ public class RoomAdventure { // Main class containing game logic
         // Room 1
         String[] room1ExitDirections = {"east", "south"}; // Room 1 exits
         Room[] room1ExitDestinations = {room2, room3}; // Destination rooms for Room 1
-        String[] room1Items = {"chair", "desk"}; // Items in Room 1
+        String[] room1Items = {"chair", "desk", "knife"}; // Items in Room 1
         String[] room1ItemDescriptions = { // Descriptions for Room 1 items
             "It is a chair",
-            "It's a desk, there is a key on it."
+            "It's a desk, there is a key on it.",
+            "On the desk, there's a small knife."
         };
-        String[] room1Grabbables = {"key"}; // Items you can take in Room 1
+        String[] room1Grabbables = {"key", "knife"}; // Items you can take in Room 1
         room1.setExitDirections(room1ExitDirections); // Set exits
         room1.setExitDestinations(room1ExitDestinations); // Set exit destinations
         room1.setItems(room1Items); // Set visible items
@@ -105,12 +140,13 @@ public class RoomAdventure { // Main class containing game logic
         // Room 2
         String[] room2ExitDirections = {"west", "south"}; // Room 2 exits
         Room[] room2ExitDestinations = {room1, room4}; // Destination rooms for Room 2
-        String[] room2Items = {"fireplace", "rug"}; // Items in Room 2
+        String[] room2Items = {"fireplace", "rug", "poker"}; // Items in Room 2
         String[] room2ItemDescriptions = { // Descriptions for Room 2 items
             "It's on fire",
-            "There is a lump of coal on the rug."
+            "There is a lump of coal on the rug.",
+            "Its next to the fireplace, rusty and well used."
         };
-        String[] room2Grabbables = {"coal"}; // Items you can take in Room 2
+        String[] room2Grabbables = {"coal", "poker"}; // Items you can take in Room 2
         room2.setExitDirections(room2ExitDirections); // Set exits
         room2.setExitDestinations(room2ExitDestinations); // Set exit destinations
         room2.setItems(room2Items); // Set visible items
@@ -121,12 +157,13 @@ public class RoomAdventure { // Main class containing game logic
         // Room 3
         String[] room3ExitDirections = {"north", "east"};
         Room[] room3ExitDestinations = {room1, room4};
-        String[] room3Items = {"bed", "box"};
+        String[] room3Items = {"bed", "box", "sword"};
         String[] room3ItemDescriptions = {
             "I can not rest now, im to busy making a joke.",
-            "its a small box with some paper inside."
+            "Its a small box with some paper inside.",
+            "On the wall there's a sword, nothing fancy, but durable."
         };
-        String[] room3Grabbables = {"paper"};
+        String[] room3Grabbables = {"paper", "sword"};
         room3.setExitDirections(room3ExitDirections);
         room3.setExitDestinations(room3ExitDestinations);
         room3.setItems(room3Items);
