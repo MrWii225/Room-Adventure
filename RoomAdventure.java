@@ -174,6 +174,8 @@ class Room { // Represents a game room
     private String[] items; // Items visible in the room
     private String[] itemDescriptions; // Descriptions for those items
     private String[] grabbables; // Items you can take
+    private Boolean locked; // if the room requires a key to enter
+    private String key; //name of item that must be in inventory to enter room if locked
 
     public Room(String name) { // Constructor
         this.name = name; // Set the room's name
@@ -217,6 +219,14 @@ class Room { // Represents a game room
 
     public String[] getGrabbables() { // Getter for grabbable items
         return grabbables;
+    }
+
+    public void setLocked(Boolean value) { // Setter for locked status
+        this.locked = value;
+    }
+
+    public Boolean getLocked() { // Getter for locked status
+        return locked;
     }
 
     @Override
