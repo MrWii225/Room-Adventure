@@ -6,6 +6,8 @@ public class RoomAdventure { // Main class containing game logic
     private static Room currentRoom; // The room the player is currently in
     private static String[] inventory = {null, null, null, null, null}; // Player inventory slots
     private static String status; // Message to display after each action
+    private static int playerDamage; // How much damage the player does
+
 
     // constants
     final private static String DEFAULT_STATUS =
@@ -16,6 +18,10 @@ public class RoomAdventure { // Main class containing game logic
     private static void handleGo(String noun) { // Handles moving between rooms
         String[] exitDirections = currentRoom.getExitDirections(); // Get available directions
         Room[] exitDestinations = currentRoom.getExitDestinations(); // Get rooms in those directions
+        if (currentRoom.hasMonster()) {
+            status = "You can't escape! The " + currentRoom.getMonster().getName() + " blocks the way out!";
+            return;
+        }
         status = "I don't see that room."; // Default if direction not found
         for (int i = 0; i < exitDirections.length; i++) { // Loop through directions
             if (noun.equals(exitDirections[i])) { // If user direction matches
@@ -52,11 +58,34 @@ public class RoomAdventure { // Main class containing game logic
         }
     }
 
+    private static void handleAttack(String noun) { // Handles attacking
+        if (currentRoom.hasMonster()) {
+            Monster m = currentRoom.getMonster();
+            m.setHealth(m.getHealth() - playerDamage); // Subtracts player damage from the health of the monster
+            status = "You attack the " + m.getName() + "!";
+
+            if (m.getHealth() <= 0) {
+                status += "You defeated the " + m.getName() + " !";
+            }
+            else {
+                status += "It has " + m.getHealth() + " health left.";
+            }
+        }
+        else {
+            status = "There is no monster here.";
+        }
+    }
+
     private static void setupGame() { // Initializes game world
+        // Rooms
         Room room1 = new Room("Room 1"); // Create Room 1
         Room room2 = new Room("Room 2"); // Create Room 2
-        Room room3 = new Room("Room 3");
-        Room room4 = new Room("Room 4");
+        Room room3 = new Room("Room 3"); // Create Room 3
+        Room room4 = new Room("Room 4"); // Create Room 4
+        // Monsters
+        Monster rat = new Monster("Rat", 5, 1); // Creates the rat
+        Monster goblin = new Monster("Goblin", 10, 2); // Creates the goblin
+        Monster ghoul = new Monster("Ghoul", 15, 3); // Creates the ghoul
 
         // Room 1
         String[] room1ExitDirections = {"east", "south"}; // Room 1 exits
@@ -87,6 +116,7 @@ public class RoomAdventure { // Main class containing game logic
         room2.setItems(room2Items); // Set visible items
         room2.setItemDescriptions(room2ItemDescriptions); // Set item descriptions
         room2.setGrabbables(room2Grabbables); // Set grabbable items
+        room2.setMonster(rat); // Set monster
 
         // Room 3
         String[] room3ExitDirections = {"north", "east"};
@@ -102,6 +132,7 @@ public class RoomAdventure { // Main class containing game logic
         room3.setItems(room3Items);
         room3.setItemDescriptions(room3ItemDescriptions);
         room3.setGrabbables(room3Grabbables);
+        room3.setMonster(goblin);
 
         // Room 4
         String[] room4ExitDirections = {"north", "west"};
@@ -117,6 +148,7 @@ public class RoomAdventure { // Main class containing game logic
         room4.setItems(room4Items);
         room4.setItemDescriptions(room4ItemDescriptions);
         room4.setGrabbables(room4Grabbables);
+        room4.setMonster(ghoul);
 
 
         currentRoom = room1; // Start game in Room 1
@@ -158,6 +190,9 @@ public class RoomAdventure { // Main class containing game logic
                 case "take": // If verb is 'take'
                     handleTake(noun); // Pick up an item
                     break;
+                case "attack": // If verb is 'fight'
+                    handleAttack(noun);
+                    break;
                 default: // If verb is unrecognized
                     status = DEFAULT_STATUS; // Set status to error message
             }
@@ -174,6 +209,7 @@ class Room { // Represents a game room
     private String[] items; // Items visible in the room
     private String[] itemDescriptions; // Descriptions for those items
     private String[] grabbables; // Items you can take
+    private Monster monster;
 
     public Room(String name) { // Constructor
         this.name = name; // Set the room's name
@@ -219,6 +255,20 @@ class Room { // Represents a game room
         return grabbables;
     }
 
+    public void setMonster(Monster monster) { // Setter for monster
+        this.monster = monster;
+    }
+
+    public Monster getMonster() { // Getter for monster
+        return monster;
+    }
+
+    public boolean hasMonster() { // Checks for monsters in room
+        return monster != null && monster.getHealth() > 0;
+    }
+
+
+
     @Override
     public String toString() { // Custom print for the room
         String result = "\nLocation: " + name; // Show room name
@@ -226,10 +276,52 @@ class Room { // Represents a game room
         for (String item : items) { // Loop items
             result += item + " "; // Append each item
         }
+
+        if (monster != null && monster.getHealth() > 0) {
+            result += "\nThere is a " + monster.getName() + " here!";
+        }
+
         result += "\nExits: "; // List exits
         for (String direction : exitDirections) { // Loop exits
             result += direction + " "; // Append each direction
         }
+        
         return result + "\n"; // Return full description
+    }
+}
+
+
+
+
+class Monster {
+    private String name; // Monster name
+    private int health; // Monster health
+    private int attackDamage; // Monster attack damage
+
+
+    public Monster(String name, int health, int attackDamage) {
+        this.name = name;
+        this.health = health;
+        this.attackDamage = attackDamage;
+    }
+
+    public String getName() { // Getter for name
+        return name;
+    }
+
+    public void setHealth(int health) { // Setter for health
+        this.health = health;
+    }
+
+    public int getHealth() { // Getter for health
+        return health;
+    }
+
+    public void setAttackDamage(int attackDamage) { // Setter for attack damage
+        this.attackDamage = attackDamage;
+    }
+
+    public int getAttackDamage() { // Getter for attack damage
+        return attackDamage;
     }
 }
