@@ -9,7 +9,7 @@ public class RoomAdventure { // Main class containing game logic
 
     // constants
     final private static String DEFAULT_STATUS =
-        "Sorry, I do not understand. Try [verb] [noun]. Valid verbs include 'go', 'look', and 'take'."; // Default error message
+        "Sorry, I do not understand. Try the format '[verb] [noun]' or a sentence starting with a verb and ending with a noun. Valid verbs include 'go', 'look', and 'take'."; // Default error message
 
 
 
@@ -140,13 +140,13 @@ public class RoomAdventure { // Main class containing game logic
             String input = s.nextLine(); // Read entire line of input
             String[] words = input.split(" "); // Split input into words
 
-            if (words.length != 2) { // Check for proper two-word command
-                status = DEFAULT_STATUS; // Set status to error message
-                continue; // Skip to next loop iteration
-            }
+//            if (words.length != 2) { // Check for proper two-word command
+//                status = DEFAULT_STATUS; // Set status to error message
+//                continue; // Skip to next loop iteration
+//            }
 
             String verb = words[0]; // First word is the action verb
-            String noun = words[1]; // Second word is the target noun
+            String noun = words[words.length - 1]; // Second word is the target noun
 
             switch (verb) { // Decide which action to take
                 case "go": // If verb is 'go'
