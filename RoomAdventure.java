@@ -14,6 +14,8 @@ public class RoomAdventure { // Main class containing game logic
 
 
     private static void handleGo(String noun) { // Handles moving between rooms
+        Room previousRoom = currentRoom;
+        Boolean validEntry = false;
         String[] exitDirections = currentRoom.getExitDirections(); // Get available directions
         Room[] exitDestinations = currentRoom.getExitDestinations(); // Get rooms in those directions
         status = "I don't see that room."; // Default if direction not found
@@ -21,8 +23,23 @@ public class RoomAdventure { // Main class containing game logic
             if (noun.equals(exitDirections[i])) { // If user direction matches
                 currentRoom = exitDestinations[i]; // Change current room
                 status = "Changed Room"; // Update status
+                Boolean locked = currentRoom.getLocked(); // get locked status on room
+                if (locked == true) { // check for key if room is locked
+                    for (int j = 0; j < inventory.length; j++){ // loop through inventory
+                        if (currentRoom.getKey().equals(inventory[j])) { // check for the room key
+                            validEntry = true;
+                        }
+                    }
+                } else {
+                    validEntry = true;
+                }
             }
         }
+        if (validEntry == false) {
+            status = "this room is locked. It needs a " + currentRoom.getKey();
+            currentRoom = previousRoom;
+        }
+
     }
 
     private static void handleLook(String noun) { // Handles inspecting items
@@ -97,6 +114,8 @@ public class RoomAdventure { // Main class containing game logic
             "its a small box with some paper inside."
         };
         String[] room3Grabbables = {"paper"};
+        room3.setLocked(true);
+        room3.setKey("key");
         room3.setExitDirections(room3ExitDirections);
         room3.setExitDestinations(room3ExitDestinations);
         room3.setItems(room3Items);
@@ -174,7 +193,7 @@ class Room { // Represents a game room
     private String[] items; // Items visible in the room
     private String[] itemDescriptions; // Descriptions for those items
     private String[] grabbables; // Items you can take
-    private Boolean locked; // if the room requires a key to enter
+    private Boolean locked = false; // if the room requires a key to enter
     private String key; //name of item that must be in inventory to enter room if locked
 
     public Room(String name) { // Constructor
@@ -221,12 +240,20 @@ class Room { // Represents a game room
         return grabbables;
     }
 
-    public void setLocked(Boolean value) { // Setter for locked status
+    public void setLocked(Boolean value) { // Setter for locked status (adding a key should automatically lock the room)
         this.locked = value;
     }
 
     public Boolean getLocked() { // Getter for locked status
         return locked;
+    }
+
+    public void setKey(String key) { // Setter for key of room is locked
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     @Override
