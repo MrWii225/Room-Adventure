@@ -1,3 +1,7 @@
+// Name: Zachary Smith
+// Description: Room Adventure, this branch is for weapon development
+
+
 import java.util.Scanner; // Import Scanner for reading user input
 
 public class RoomAdventure { // Main class containing game logic
