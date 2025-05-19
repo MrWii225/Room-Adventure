@@ -41,6 +41,8 @@ public class RoomAdventure { // Main class containing game logic
 
 
     private static void handleGo(String noun) { // Handles moving between rooms
+        Room previousRoom = currentRoom;
+        Boolean validEntry = false;
         String[] exitDirections = currentRoom.getExitDirections(); // Get available directions
         Room[] exitDestinations = currentRoom.getExitDestinations(); // Get rooms in those directions
         if (currentRoom.hasMonster()) {
@@ -52,8 +54,23 @@ public class RoomAdventure { // Main class containing game logic
             if (noun.equals(exitDirections[i])) { // If user direction matches
                 currentRoom = exitDestinations[i]; // Change current room
                 status = "Changed Room"; // Update status
+                Boolean locked = currentRoom.getLocked(); // get locked status on room
+                if (locked == true) { // check for key if room is locked
+                    for (int j = 0; j < inventory.length; j++){ // loop through inventory
+                        if (currentRoom.getKey().equals(inventory[j])) { // check for the room key
+                            validEntry = true;
+                        }
+                    }
+                } else {
+                    validEntry = true;
             }
         }
+    }
+        if (validEntry == false) {
+            status = "this room is locked. It needs a " + currentRoom.getKey();
+            currentRoom = previousRoom;
+        }
+
     }
 
     private static void handleLook(String noun) { // Handles inspecting items
@@ -164,6 +181,8 @@ public class RoomAdventure { // Main class containing game logic
             "On the wall there's a sword, nothing fancy, but durable."
         };
         String[] room3Grabbables = {"paper", "sword"};
+        room3.setLocked(true);
+        room3.setKey("key");
         room3.setExitDirections(room3ExitDirections);
         room3.setExitDestinations(room3ExitDestinations);
         room3.setItems(room3Items);
@@ -209,13 +228,13 @@ public class RoomAdventure { // Main class containing game logic
             String input = s.nextLine(); // Read entire line of input
             String[] words = input.split(" "); // Split input into words
 
-            if (words.length != 2) { // Check for proper two-word command
-                status = DEFAULT_STATUS; // Set status to error message
-                continue; // Skip to next loop iteration
-            }
+            //if (words.length != 2) { // Check for proper two-word command
+            //    status = DEFAULT_STATUS; // Set status to error message
+            //    continue; // Skip to next loop iteration
+            //}
 
             String verb = words[0]; // First word is the action verb
-            String noun = words[1]; // Second word is the target noun
+            String noun = words[words.length - 1]; // Second word is the target noun
 
             switch (verb) { // Decide which action to take
                 case "go": // If verb is 'go'
@@ -246,6 +265,8 @@ class Room { // Represents a game room
     private String[] items; // Items visible in the room
     private String[] itemDescriptions; // Descriptions for those items
     private String[] grabbables; // Items you can take
+    private Boolean locked = false; // if the room requires a key to enter
+    private String key; //name of item that must be in inventory to enter room if locked
     private Monster monster;
 
     public Room(String name) { // Constructor
@@ -291,6 +312,23 @@ class Room { // Represents a game room
     public String[] getGrabbables() { // Getter for grabbable items
         return grabbables;
     }
+
+    public void setLocked(Boolean value) { // Setter for locked status (adding a key should automatically lock the room)
+        this.locked = value;
+    }
+
+    public Boolean getLocked() { // Getter for locked status
+        return locked;
+    }
+
+    public void setKey(String key) { // Setter for key of room is locked
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
 
     public void setMonster(Monster monster) { // Setter for monster
         this.monster = monster;
