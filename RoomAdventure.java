@@ -145,6 +145,10 @@ public class RoomAdventure { // Main class containing game logic
         }
 }
 
+    private static void handleMap() {
+        status = "";
+        drawMap();
+    }
     private static void handleAttack(String noun) { // Handles attacking
         if (currentRoom.hasMonster()) {
             Monster m = currentRoom.getMonster();
@@ -255,28 +259,31 @@ public class RoomAdventure { // Main class containing game logic
     }
 
     private static void drawMap() {
-    System.out.println("\nMap:");
-    if (currentRoom == room1) {
-        System.out.print(" -> Room 1 ");
-        System.out.println("   Room 2");
-        System.out.print("   Room 3 ");
-        System.out.print("   Room 4");
-    } else if (currentRoom == room2) {
-        System.out.print("   Room 1 ");
-        System.out.println(" -> Room 2");
-        System.out.print("   Room 3 ");
-        System.out.print("   Room 4");
-    } else if (currentRoom == room3) {
-        System.out.print("   Room 1 ");
-        System.out.println("   Room 2");
-        System.out.print(" -> Room 3 ");
-        System.out.print("   Room 4");
-    } else if (currentRoom == room4) {
-        System.out.print("   Room 1 ");
-        System.out.println("   Room 2");
-        System.out.print("   Room 3 ");
-        System.out.print(" -> Room 4");
-    }
+        System.out.println("\nMap:");
+        if (currentRoom == room1) {
+            System.out.print(" -> Room 1 ");
+            System.out.println("   Room 2");
+            System.out.print("   Room 3 ");
+            System.out.print("   Room 4");
+        }
+        else if (currentRoom == room2){
+            System.out.print("   Room 1 ");
+            System.out.println(" -> Room 2");
+            System.out.print("   Room 3 ");
+            System.out.print("   Room 4");
+        }
+        else if (currentRoom == room3) {
+            System.out.print("   Room 1 ");
+            System.out.println("   Room 2");
+            System.out.print(" -> Room 3 ");
+            System.out.print("   Room 4");
+        }
+        else if (currentRoom == room4) {
+            System.out.print("   Room 1 ");
+            System.out.println("   Room 2");
+            System.out.print("   Room 3 ");
+            System.out.print(" -> Room 4");
+        }
 }
 
     
@@ -292,7 +299,6 @@ public class RoomAdventure { // Main class containing game logic
                 System.out.print(inventory[i] + " "); // Print each inventory item
             }
 
-            drawMap();
             System.out.println("\nWhat would you like to do? "); // Prompt user for next action
 
             Scanner s = new Scanner(System.in); // Create Scanner to read input
@@ -322,6 +328,9 @@ public class RoomAdventure { // Main class containing game logic
                     break;
                 case "shine": // for flashlight
                     handleShine();
+                    break;
+                case "map": // draws map
+                    handleMap();
                     break;
                 default: // If verb is unrecognized
                     status = DEFAULT_STATUS; // Set status to error message
