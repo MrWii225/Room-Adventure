@@ -174,6 +174,7 @@ public class RoomAdventure { // Main class containing game logic
         room2 = new Room("Room 2"); // Create Room 2
         room3 = new Room("Room 3"); // Create Room 3
         room4 = new Room("Room 4"); // Create Room 4
+
         // Monsters
         Monster rat = new Monster("Rat", 5, 1); // Creates the rat
         Monster goblin = new Monster("Goblin", 10, 2); // Creates the goblin
@@ -185,10 +186,10 @@ public class RoomAdventure { // Main class containing game logic
         String[] room1Items = {"chair", "desk", "knife"}; // Items in Room 1
         String[] room1ItemDescriptions = { // Descriptions for Room 1 items
             "It is a chair",
-            "It's a desk, there is a key on it.",
+            "It's a desk, covered in papers.",
             "On the desk, there's a small knife."
         };
-        String[] room1Grabbables = {"key", "knife"}; // Items you can take in Room 1
+        String[] room1Grabbables = {"knife"}; // Items you can take in Room 1
         room1.setExitDirections(room1ExitDirections); // Set exits
         room1.setExitDestinations(room1ExitDestinations); // Set exit destinations
         room1.setItems(room1Items); // Set visible items
@@ -207,13 +208,17 @@ public class RoomAdventure { // Main class containing game logic
             "Its next to the fireplace, rusty and well used.",
             "An old, ornate chest of drawers. One of them is open, with a flashlight sitting inside."
         };
-        String[] room2Grabbables = {"coal", "poker", "flashlight"}; // Items you can take in Room 2
+        String[] room2Grabbables = {"coal", "poker", "flashlight", "coin"}; // Items you can take in Room 2
+        String[] room2invItems = {"coin"};
+        String[] room2invDesc = {"Behind the chest there sits a dusty gold coin. Probably been behind there for years."};
         room2.setExitDirections(room2ExitDirections); // Set exits
         room2.setExitDestinations(room2ExitDestinations); // Set exit destinations
         room2.setItems(room2Items); // Set visible items
         room2.setItemDescriptions(room2ItemDescriptions); // Set item descriptions
         room2.setGrabbables(room2Grabbables); // Set grabbable items
         room2.setMonster(rat); // Set monster
+        room2.SetinvItemDesc(room2invDesc);
+        room2.SetinvItems(room2invItems);
 
         // Room 3
         String[] room3ExitDirections = {"north", "east"};
@@ -224,15 +229,17 @@ public class RoomAdventure { // Main class containing game logic
             "Its a small box with some paper inside.",
             "On the wall there's a sword, nothing fancy, but durable."
         };
-        String[] room3Grabbables = {"paper", "sword"};
-        room3.setLocked(true);
-        room3.setKey("key");
+        String[] room3Grabbables = {"paper", "sword", "key"};
+        String[] room3invItems = {"Music Box"};
+        String[] room3invDesc = {"An old music box with a key inside"};
         room3.setExitDirections(room3ExitDirections);
         room3.setExitDestinations(room3ExitDestinations);
         room3.setItems(room3Items);
         room3.setItemDescriptions(room3ItemDescriptions);
         room3.setGrabbables(room3Grabbables);
         room3.setMonster(goblin);
+        room3.SetinvItemDesc(room3invDesc);
+        room3.SetinvItems(room3invItems);
 
         // Room 4
         String[] room4ExitDirections = {"north", "west"};
@@ -245,6 +252,8 @@ public class RoomAdventure { // Main class containing game logic
         String[] room4Grabbables = {"plant"};
         String[] room4invItems = {"Window"};
         String[] room4invDesc = {"The flashlight reveals nothing, but shines off the window"};
+        room4.setLocked(true);
+        room4.setKey("key");
         room4.setExitDirections(room4ExitDirections);
         room4.setExitDestinations(room4ExitDestinations);
         room4.setItems(room4Items);
@@ -253,7 +262,6 @@ public class RoomAdventure { // Main class containing game logic
         room4.SetinvItems(room4invItems);
         room4.SetinvItemDesc(room4invDesc);
         room4.setMonster(ghoul);
-
 
         currentRoom = room1; // Start game in Room 1
     }
