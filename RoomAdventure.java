@@ -1,3 +1,12 @@
+// Shawn Vogt, Zachary Smith, Caden Duhon
+// Features:
+// Enemy class 
+// Attacking and killing enemies
+// Locked rooms
+// Less strict user commands (Allowing for more than two words)
+// Flashlight that reveals hidden items
+// Map
+
 import java.util.Scanner; // Import Scanner for reading user input
 
 public class RoomAdventure { // Main class containing game logic
@@ -112,9 +121,10 @@ public class RoomAdventure { // Main class containing game logic
         }
     }
 
+    // flashlight function
     private static void handleShine() {
         boolean hasFlashlight = false;
-
+        //check if user has a flashlight in inventory
         for (String item : inventory) {
             if ("flashlight".equals(item)) {
                 hasFlashlight = true;
@@ -144,7 +154,7 @@ public class RoomAdventure { // Main class containing game logic
             status += "\n";
         }
 }
-
+    // simple function just to call the drawing of the map
     private static void handleMap() {
         status = "";
         drawMap();
@@ -266,6 +276,7 @@ public class RoomAdventure { // Main class containing game logic
         currentRoom = room1; // Start game in Room 1
     }
 
+    // Draw the map
     private static void drawMap() {
         System.out.println("\nMap:");
         if (currentRoom == room1) {
