@@ -7,14 +7,6 @@ public class RoomAdventure { // Main class containing game logic
     private static String[] inventory = {null, null, null, null, null}; // Player inventory slots
     private static String status; // Message to display after each action
     private static int playerBaseDamage = 1; // How much damage the player does without a weapon
-    private static String[] r1 = {}; 
-    private static String[] r1Desc = {};
-    private static String[] r2 = {}; 
-    private static String[] r2Desc = {};
-    private static String[] r3 = {};  
-    private static String[] r3Desc = {};
-    private static String[] r4 = {};  
-    private static String[] r4Desc = {};
     // method for new damage with weapon
     private static int newPlayerDamage() {
         int newDamage = playerBaseDamage;
