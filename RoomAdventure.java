@@ -7,7 +7,7 @@ public class RoomAdventure { // Main class containing game logic
     private static String[] inventory = {null, null, null, null, null}; // Player inventory slots
     private static String status; // Message to display after each action
     private static int playerBaseDamage = 1; // How much damage the player does without a weapon
-
+    
     // method for new damage with weapon
     private static int newPlayerDamage() {
         int newDamage = playerBaseDamage;
@@ -108,6 +108,39 @@ public class RoomAdventure { // Main class containing game logic
         }
     }
 
+    private static void handleShine() {
+        boolean hasFlashlight = false;
+
+        for (String item : inventory) {
+            if ("flashlight".equals(item)) {
+                hasFlashlight = true;
+                break;
+            }
+        }
+
+        if (!hasFlashlight) {
+            status = "You try to shine something, but you have no flashlight.";
+            return;
+        }
+
+        String[] hiddenItems = currentRoom.getinvItems();
+        String[] hiddenDescs = currentRoom.GetinvItemDesc();
+
+        if (hiddenItems == null || hiddenItems.length == 0) {
+            status = "You shine the flashlight but see nothing unusual.";
+            return;
+        }
+
+        status = "As you shine your flashlight, you notice:\n";
+        for (int i = 0; i < hiddenItems.length; i++) {
+            status += "- " + hiddenItems[i];
+            if (hiddenDescs != null && i < hiddenDescs.length) {
+                status += ": " + hiddenDescs[i];
+            }
+            status += "\n";
+        }
+}
+
     private static void handleAttack(String noun) { // Handles attacking
         if (currentRoom.hasMonster()) {
             Monster m = currentRoom.getMonster();
@@ -153,17 +186,20 @@ public class RoomAdventure { // Main class containing game logic
         room1.setItems(room1Items); // Set visible items
         room1.setItemDescriptions(room1ItemDescriptions); // Set item descriptions
         room1.setGrabbables(room1Grabbables); // Set grabbable items
+        room1.SetinvItems(room1Items);
+        room1.SetinvItemDesc(room1ItemDescriptions);
 
         // Room 2
         String[] room2ExitDirections = {"west", "south"}; // Room 2 exits
         Room[] room2ExitDestinations = {room1, room4}; // Destination rooms for Room 2
-        String[] room2Items = {"fireplace", "rug", "poker"}; // Items in Room 2
+        String[] room2Items = {"fireplace", "rug", "poker", "chest"}; // Items in Room 2
         String[] room2ItemDescriptions = { // Descriptions for Room 2 items
             "It's on fire",
             "There is a lump of coal on the rug.",
-            "Its next to the fireplace, rusty and well used."
+            "Its next to the fireplace, rusty and well used.",
+            "An old, ornate chest of drawers. One of them is open, with a flashlight sitting inside."
         };
-        String[] room2Grabbables = {"coal", "poker"}; // Items you can take in Room 2
+        String[] room2Grabbables = {"coal", "poker", "flashlight"}; // Items you can take in Room 2
         room2.setExitDirections(room2ExitDirections); // Set exits
         room2.setExitDestinations(room2ExitDestinations); // Set exit destinations
         room2.setItems(room2Items); // Set visible items
@@ -199,11 +235,15 @@ public class RoomAdventure { // Main class containing game logic
             "A large hole in the floor. You can't see the bottom."
         };
         String[] room4Grabbables = {"plant"};
+        String[] room4invItems = {"Window"};
+        String[] room4invDesc = {"The flashlight reveals nothing, but shines off the window"};
         room4.setExitDirections(room4ExitDirections);
         room4.setExitDestinations(room4ExitDestinations);
         room4.setItems(room4Items);
         room4.setItemDescriptions(room4ItemDescriptions);
         room4.setGrabbables(room4Grabbables);
+        room4.SetinvItems(room4invItems);
+        room4.SetinvItemDesc(room4invDesc);
         room4.setMonster(ghoul);
 
 
@@ -249,6 +289,9 @@ public class RoomAdventure { // Main class containing game logic
                 case "attack": // If verb is 'fight'
                     handleAttack(noun);
                     break;
+                case "shine": // for flashlight
+                    handleShine();
+                    break;
                 default: // If verb is unrecognized
                     status = DEFAULT_STATUS; // Set status to error message
             }
@@ -264,6 +307,8 @@ class Room { // Represents a game room
     private Room[] exitDestinations; // Rooms reached by each direction
     private String[] items; // Items visible in the room
     private String[] itemDescriptions; // Descriptions for those items
+    private String[] invItems; // Items that can't be seen without a flashlight
+    private String[] invItemsDesc; // InvItems Descriptions
     private String[] grabbables; // Items you can take
     private Boolean locked = false; // if the room requires a key to enter
     private String key; //name of item that must be in inventory to enter room if locked
@@ -271,6 +316,22 @@ class Room { // Represents a game room
 
     public Room(String name) { // Constructor
         this.name = name; // Set the room's name
+    }
+
+    public void SetinvItems(String[] invItems) {
+        this.invItems = invItems;
+    }
+    
+    public String[] getinvItems() {
+        return invItems;
+    }
+
+    public void SetinvItemDesc(String[] invItemDesc) {
+        this.invItemsDesc = invItemDesc;
+    }
+
+    public String[] GetinvItemDesc() {
+        return invItemsDesc;
     }
 
     public void setExitDirections(String[] exitDirections) { // Setter for exits
