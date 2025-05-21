@@ -7,7 +7,11 @@ public class RoomAdventure { // Main class containing game logic
     private static String[] inventory = {null, null, null, null, null}; // Player inventory slots
     private static String status; // Message to display after each action
     private static int playerBaseDamage = 1; // How much damage the player does without a weapon
-    
+    private static Room room1;
+    private static Room room2;
+    private static Room room3;
+    private static Room room4;
+
     // method for new damage with weapon
     private static int newPlayerDamage() {
         int newDamage = playerBaseDamage;
@@ -162,10 +166,10 @@ public class RoomAdventure { // Main class containing game logic
 
     private static void setupGame() { // Initializes game world
         // Rooms
-        Room room1 = new Room("Room 1"); // Create Room 1
-        Room room2 = new Room("Room 2"); // Create Room 2
-        Room room3 = new Room("Room 3"); // Create Room 3
-        Room room4 = new Room("Room 4"); // Create Room 4
+        room1 = new Room("Room 1"); // Create Room 1
+        room2 = new Room("Room 2"); // Create Room 2
+        room3 = new Room("Room 3"); // Create Room 3
+        room4 = new Room("Room 4"); // Create Room 4
         // Monsters
         Monster rat = new Monster("Rat", 5, 1); // Creates the rat
         Monster goblin = new Monster("Goblin", 10, 2); // Creates the goblin
@@ -249,6 +253,32 @@ public class RoomAdventure { // Main class containing game logic
 
         currentRoom = room1; // Start game in Room 1
     }
+
+    private static void drawMap() {
+    System.out.println("\nMap:");
+    if (currentRoom == room1) {
+        System.out.print(" -> Room 1 ");
+        System.out.println("   Room 2");
+        System.out.print("   Room 3 ");
+        System.out.print("   Room 4");
+    } else if (currentRoom == room2) {
+        System.out.print("   Room 1 ");
+        System.out.println(" -> Room 2");
+        System.out.print("   Room 3 ");
+        System.out.print("   Room 4");
+    } else if (currentRoom == room3) {
+        System.out.print("   Room 1 ");
+        System.out.println("   Room 2");
+        System.out.print(" -> Room 3 ");
+        System.out.print("   Room 4");
+    } else if (currentRoom == room4) {
+        System.out.print("   Room 1 ");
+        System.out.println("   Room 2");
+        System.out.print("   Room 3 ");
+        System.out.print(" -> Room 4");
+    }
+}
+
     
     @SuppressWarnings("java:S2189")
     public static void main(String[] args) { // Entry point of the program
@@ -262,6 +292,7 @@ public class RoomAdventure { // Main class containing game logic
                 System.out.print(inventory[i] + " "); // Print each inventory item
             }
 
+            drawMap();
             System.out.println("\nWhat would you like to do? "); // Prompt user for next action
 
             Scanner s = new Scanner(System.in); // Create Scanner to read input
@@ -462,3 +493,5 @@ class Monster {
     }
 
 }
+
+
